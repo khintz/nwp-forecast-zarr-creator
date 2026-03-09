@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  app:
+    platform: ${DEV_CONTAINER_PLATFORM:-linux/amd64}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: sleep infinity
+    working_dir: /app
+    volumes:
+      - .:/app
+      - ./data/harmonie/ml:/mnt/harmonie-data-from-pds/ml
+      - ./tmp:/tmp
+    environment:
+      SRC_GRIB_TEMP_PATH: ""

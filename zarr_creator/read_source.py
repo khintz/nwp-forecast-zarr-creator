@@ -1,18 +1,34 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import datetime
+import os
+from pathlib import Path
 
 import isodate
 import xarray as xr
 from loguru import logger
 
+REFS_ROOT_PATH = os.getenv("REFS_ROOT_PATH")
+
+if REFS_ROOT_PATH is None:
+    raise ValueError(
+        "Environment variable REFS_ROOT_PATH must be set to the root path of "
+        "gribscan reference files (i.e. the .jsons files created by gribscan)"
+    )
+
 
 def read_level_type_data(t_analysis: datetime.datetime, level_type: str) -> xr.Dataset:
-    t_str = isodate.datetime_isoformat(t_analysis).replace(":", "")
-    assert t_str.endswith("Z")
-    fp = f"/home/ec2-user/nwp-forecast-zarr-creator/refs/CONTROL__dmi/{t_str}.jsons/{level_type}.json"
+    if t_analysis.tzinfo is None:
+        t_analysis = t_analysis.replace(tzinfo=datetime.timezone.utc)
+    t_analysis_utc = t_analysis.astimezone(datetime.timezone.utc)
+
+    member_id = os.getenv("MEMBER_ID", "CONTROL__dmi")
+
+    t_str = t_analysis_utc.strftime("%Y-%m-%dT%H%MZ")
+    fp = Path(REFS_ROOT_PATH) / member_id / f"{t_str}.jsons" / f"{level_type}.json"
+
     logger.info(f"Reading {t_analysis} {level_type} data from {fp}")
-    ds = xr.open_zarr(f"reference::{fp}")
+    ds = xr.open_zarr(f"reference::{str(fp)}")
 
     # copy over cf standard-names where eccodes provides them
     for var_name in ds.data_vars:

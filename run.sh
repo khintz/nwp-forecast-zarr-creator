@@ -1,7 +1,13 @@
 #!/bin/bash
 # every hour run the script
-REFS_ROOT_PATH="/home/ec2-user/nwp-forecast-zarr-creator/refs"
-TEMP_ROOT="/tmp/nwp-forecast-zarr-creator"
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/script_defaults.sh"
+
+# print env vars for debugging
+echo "SRC_GRIB_ROOT_PATH: ${SRC_GRIB_ROOT_PATH}"
+echo "REFS_ROOT_PATH: ${REFS_ROOT_PATH}"
+echo "SRC_GRIB_TEMP_PATH: ${SRC_GRIB_TEMP_PATH:-not set}"
 
 while true; do
     # find the nearest three hour interval to the current time, e.g. 00:00,
@@ -18,8 +24,8 @@ while true; do
     # format the time in iso8601 format in utc
     analysis_time=$(date -d "$rounded_time_str" -u +"%Y-%m-%dT%H:%M:%SZ")
 
-    # the refs path uses this analysis time in iso8601 format but without colons, without seconds and ending in .json
-    analysis_time_refs=$(date -d "$rounded_time_str" -u +"%Y-%m-%dT%H%M%SZ")
+    # refs directory format is normalized to minute precision: YYYY-MM-DDTHHMMZ
+    analysis_time_refs=$(date -d "$rounded_time_str" -u +"%Y-%m-%dT%H%MZ")
     refs_path="${REFS_ROOT_PATH}/CONTROL__dmi/${analysis_time_refs}.jsons/"
 
     if [ -d "$refs_path" ]; then
@@ -29,8 +35,13 @@ while true; do
         continue
     else
         echo "Creating indexes refs for analysis time $analysis_time"
-        echo "(calling ./build_indexes_and_refs.sh $analysis_time $TEMP_ROOT)"
-        ./build_indexes_and_refs.sh $analysis_time $TEMP_ROOT
+        if [ -n "${SRC_GRIB_TEMP_PATH:-}" ]; then
+            echo "(calling ./build_indexes_and_refs.sh $analysis_time $SRC_GRIB_TEMP_PATH)"
+            ./build_indexes_and_refs.sh "$analysis_time" "$SRC_GRIB_TEMP_PATH"
+        else
+            echo "(calling ./build_indexes_and_refs.sh $analysis_time)"
+            ./build_indexes_and_refs.sh "$analysis_time"
+        fi
 
         # check if the script was successful with the exit code
         if [ $? -eq 0 ]; then
@@ -49,9 +60,9 @@ while true; do
             if [ $? -eq 0 ]; then
                 # delete temporary storage if it was used
                 echo "Zarr conversion successful for analysis time $analysis_time"
-                if [ -d "$TEMP_ROOT" ]; then
+                if [ -n "${SRC_GRIB_TEMP_PATH:-}" ] && [ -d "$SRC_GRIB_TEMP_PATH" ]; then
                     echo "Deleting temporary storage..."
-                    rm -rf $TEMP_ROOT
+                    rm -rf "$SRC_GRIB_TEMP_PATH"
                 fi
                 break
             else
