@@ -281,7 +281,7 @@ docker build -t nwp-forecast-zarr-creator:$(git describe --tags --abbrev=0) .
 Run container:
 
 ```bash
-docker run --rm -it -v /mnt/:/mnt/ -v /tmp/:/tmp/ --name nwp-forecast-zarr-creator nwp-forecast-zarr-creator:v0.6.0
+docker run --rm -it -v /mnt/:/mnt/ -v /tmp/:/tmp/ --name nwp-forecast-zarr-creator nwp-forecast-zarr-creator:$(git describe --tags --abbrev=0)
 ```
 
 In the production Docker image, `SRC_GRIB_TEMP_PATH` is set by default to
