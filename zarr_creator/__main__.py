@@ -78,6 +78,7 @@ def cli(argv=None):
             ds_level_type = read_level_type_data(
                 t_analysis=args.t_analysis, level_type=level_type
             )
+
             for var_name, levels in variables.items():
                 da = ds_level_type[var_name]
 
