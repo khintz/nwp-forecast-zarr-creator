@@ -272,16 +272,16 @@ So we run everything inside a container with a known-good ecCodes installation,
 so we have a consistent and reproducible environment.
 
 
-Build image:
+Build image (using most recent git tag to set tag for image):
 
 ```bash
-docker build -t nwp-forecast-zarr-creator .
+docker build -t nwp-forecast-zarr-creator:$(git describe --tags --abbrev=0) .
 ```
 
 Run container:
 
 ```bash
-docker run --rm -it -v /mnt/:/mnt/ -v /tmp/:/tmp/ nwp-forecast-zarr-creator:latest
+docker run --rm -it -v /mnt/:/mnt/ -v /tmp/:/tmp/ --name nwp-forecast-zarr-creator nwp-forecast-zarr-creator:v0.6.0
 ```
 
 In the production Docker image, `SRC_GRIB_TEMP_PATH` is set by default to

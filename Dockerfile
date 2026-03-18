@@ -10,6 +10,7 @@ COPY .git ./.git
 # copy over entrypoint and runtime scripts
 COPY run.sh .
 COPY build_indexes_and_refs.sh .
+COPY script_defaults.sh .
 
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 ENV PATH="/root/.local/bin:$PATH"
