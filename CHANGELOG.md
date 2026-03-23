@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.7.0]
+
+### Added
+
+- Added vertical velocity, `w`, on pressure levels to zarr output. [\#24](https://github.com/dmidk/nwp-forecast-zarr-creator/pull/24), @khintz
+
 ## [v0.6.0]
 
 This release adds support for extracting instantaneous surface downwelling shortwave and longwave radiation fluxes, introduces a full dev-container workflow for reproducible local development, and includes an intake catalog for accessing the generated zarr datasets.
