@@ -100,7 +100,7 @@ Optional environment overrides:
 Example:
 
 ```bash
-MAX_HOUR=12 ./scripts/download_harmonie_data.sh 2025-03-02T00:00:00Z
+AWS_ACCESS_KEY_ID=<val> AWS_SECRET_ACCESS_KEY=<val> MAX_HOUR=12 ./scripts/download_harmonie_data.sh 2025-03-02T00:00:00Z
 ```
 
 ## 3. Run the pipeline manually in dev
