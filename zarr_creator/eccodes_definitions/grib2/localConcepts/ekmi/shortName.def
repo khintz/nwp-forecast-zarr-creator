@@ -87,7 +87,7 @@
          tablesVersion = 30 ;
         }
 #W component of wind
-'w' = {
+'tw' = {
          discipline = 0 ;
          parameterCategory = 2 ;
          parameterNumber = 9 ;
@@ -805,17 +805,6 @@
          discipline = 0 ;
          parameterCategory = 2 ;
          parameterNumber = 8 ;
-         centre = 94 ;
-         editionNumber = 2 ;
-         interpretationOfNumberOfPoints = 0 ;
-         subCentre = 255 ;
-         tablesVersion = 30 ;
-        }
-#Geometrical vertical velocity
-'w' = {
-         discipline = 0 ;
-         parameterCategory = 2 ;
-         parameterNumber = 9 ;
          centre = 94 ;
          editionNumber = 2 ;
          interpretationOfNumberOfPoints = 0 ;
