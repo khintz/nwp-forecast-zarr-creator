@@ -87,7 +87,7 @@ DATA_COLLECTION = OrderedDict(
                     100,
                 ]
                 # for v in "z t u v tw r ciwc cwat".split()  # variables in DANRA
-                for v in "z t u v r".split()
+                for v in "z t u v r tw".split()
             },
         )
     ],
